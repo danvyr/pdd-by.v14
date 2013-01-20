@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Decode/Util/Path.h"
+#include "Limb/IImageLimb.h"
 
-#include "pddby/Limb/IImageLimb.h"
+#include <stdint.h>
 
 namespace PddBy
 {
@@ -10,7 +11,7 @@ namespace PddBy
 class Oak14ImageLimb : public IImageLimb
 {
 public:
-    Oak14ImageLimb(Path const& rootPath, std::string const& magicString, std::uint32_t magicNumber);
+    Oak14ImageLimb(Path const& rootPath, std::string const& magicString, uint32_t magicNumber);
     virtual ~Oak14ImageLimb();
 
     virtual ImageLeaf GetImage(std::string const& imageId) const;
@@ -18,7 +19,7 @@ public:
 private:
     Path const m_rootPath;
     std::string const m_magicString;
-    std::uint32_t const m_magicNumber;
+    uint32_t const m_magicNumber;
 };
 
 } // namespace PddBy

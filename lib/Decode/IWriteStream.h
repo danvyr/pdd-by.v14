@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pddby/Buffer.h"
+#include "Buffer.h"
 
 #include <memory>
 
@@ -16,6 +16,6 @@ public:
     virtual void Write(void const* buffer, std::size_t size) = 0;
 };
 
-typedef std::unique_ptr<IWriteStream> IWriteStreamPtr;
+typedef std::auto_ptr<IWriteStream> IWriteStreamPtr;
 
 } // namespace PddBy

@@ -23,11 +23,18 @@ set(${PROJECT_NAME}_SOURCES
     Decode/Util/CodepageConverter.cpp
     Decode/Util/Hash.cpp
     Decode/Util/Path.cpp
-    Limb/JsonSectionLimb.cpp
-    Limb/JsonTopicLimb.cpp
-    Oak/Oak14/Oak14ImageLimb.cpp
-    Oak/Oak14/Oak14QuestionLimb.cpp
+    Limb/Json/JsonSectionLimb.cpp
+    Limb/Json/JsonTopicLimb.cpp
+    Limb/Oak14/Oak14ImageLimb.cpp
+    Limb/Oak14/Oak14QuestionLimb.cpp
+    Limb/Sqlite/SqliteCommentLimb.cpp
+    Limb/Sqlite/SqliteImageLimb.cpp
+    Limb/Sqlite/SqliteQuestionLimb.cpp
+    Limb/Sqlite/SqliteSectionLimb.cpp
+    Limb/Sqlite/SqliteTopicLimb.cpp
+    Limb/Sqlite/SqliteTraffRegLimb.cpp
     Oak/Oak14.cpp
+    Oak/SqliteOak.cpp
     Forest.cpp
 )
 
@@ -56,11 +63,25 @@ set(${PROJECT_NAME}_HEADERS
     Decode/Util/Hash.h
     Decode/Util/Path.h
     Decode/IWriteStream.h
-    Limb/JsonSectionLimb.h
-    Limb/JsonTopicLimb.h
-    Oak/Oak14/Oak14ImageLimb.h
-    Oak/Oak14/Oak14QuestionLimb.h
+    Limb/IMutableCommentLimb.h
+    Limb/IMutableImageLimb.h
+    Limb/IMutableQuestionLimb.h
+    Limb/IMutableSectionLimb.h
+    Limb/IMutableTopicLimb.h
+    Limb/IMutableTraffRegLimb.h
+    Limb/Json/JsonSectionLimb.h
+    Limb/Json/JsonTopicLimb.h
+    Limb/Oak14/Oak14ImageLimb.h
+    Limb/Oak14/Oak14QuestionLimb.h
+    Limb/Sqlite/SqliteCommentLimb.h
+    Limb/Sqlite/SqliteImageLimb.h
+    Limb/Sqlite/SqliteQuestionLimb.h
+    Limb/Sqlite/SqliteSectionLimb.h
+    Limb/Sqlite/SqliteTopicLimb.h
+    Limb/Sqlite/SqliteTraffRegLimb.h
+    Oak/IMutableOak.h
     Oak/Oak14.h
+    Oak/SqliteOak.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${${PROJECT_NAME}_SOURCES} ${${PROJECT_NAME}_HEADERS})

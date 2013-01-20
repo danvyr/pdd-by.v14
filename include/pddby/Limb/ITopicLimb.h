@@ -9,7 +9,7 @@ namespace PddBy
 
 struct TopicLeaf;
 typedef ICrawler<TopicLeaf> ITopicCrawler;
-typedef std::unique_ptr<ITopicCrawler> ITopicCrawlerPtr;
+typedef std::auto_ptr<ITopicCrawler> ITopicCrawlerPtr;
 
 class ITopicLimb
 {

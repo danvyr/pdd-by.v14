@@ -21,8 +21,7 @@ void MemoryWriteStream::Write(Buffer const& buffer)
 
 void MemoryWriteStream::Write(void const* buffer, std::size_t size)
 {
-    std::copy(static_cast<std::uint8_t const*>(buffer), static_cast<std::uint8_t const*>(buffer) + size,
-        std::back_inserter(m_buffer));
+    std::copy(static_cast<uint8_t const*>(buffer), static_cast<uint8_t const*>(buffer) + size, std::back_inserter(m_buffer));
 }
 
 } // namespace PddBy

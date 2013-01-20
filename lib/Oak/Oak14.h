@@ -1,8 +1,7 @@
 #pragma once
 
-#include "pddby/IOak.h"
-
 #include "Decode/Util/Path.h"
+#include "IOak.h"
 
 #include <json/value.h>
 
@@ -12,16 +11,9 @@ namespace PddBy
 {
 
 class Oak14ImageLimb;
-typedef std::unique_ptr<Oak14ImageLimb> Oak14ImageLimbPtr;
-
 class Oak14QuestionLimb;
-typedef std::unique_ptr<Oak14QuestionLimb> Oak14QuestionLimbPtr;
-
 class JsonSectionLimb;
-typedef std::unique_ptr<JsonSectionLimb> JsonSectionLimbPtr;
-
 class JsonTopicLimb;
-typedef std::unique_ptr<JsonTopicLimb> JsonTopicLimbPtr;
 
 class Oak14 : public IOak
 {
@@ -42,10 +34,10 @@ public:
 private:
     Path const m_rootPath;
     Json::Value m_jsonRoot;
-    Oak14ImageLimbPtr m_imageLimb;
-    Oak14QuestionLimbPtr m_questionLimb;
-    JsonSectionLimbPtr m_sectionLimb;
-    JsonTopicLimbPtr m_topicLimb;
+    std::auto_ptr<Oak14ImageLimb> m_imageLimb;
+    std::auto_ptr<Oak14QuestionLimb> m_questionLimb;
+    std::auto_ptr<JsonSectionLimb> m_sectionLimb;
+    std::auto_ptr<JsonTopicLimb> m_topicLimb;
 };
 
 } // namespace PddBy

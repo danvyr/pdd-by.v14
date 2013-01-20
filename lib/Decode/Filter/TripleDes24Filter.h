@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Decode/IFilter.h"
-
-#include "pddby/Buffer.h"
+#include "Buffer.h"
 
 namespace PddBy
 {
@@ -11,6 +10,7 @@ class TripleDes24Filter : public IFilter
 {
 public:
     TripleDes24Filter(IFilterPtr filter, Buffer const& key);
+    virtual ~TripleDes24Filter();
 
     virtual IReadStreamPtr Apply(IReadStreamPtr stream);
 

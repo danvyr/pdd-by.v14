@@ -6,9 +6,24 @@
 #include "Decode/Filter/TripleDesFilter.h"
 #include "Decode/Stream/FileReadStream.h"
 #include "Decode/Util/Hash.h"
+#include "Leaf/ImageLeaf.h"
+#include "Shit.h"
 
-#include "pddby/Leaf/ImageLeaf.h"
-#include "pddby/Shit.h"
+namespace
+{
+
+PddBy::Buffer BufferFromString(std::string const& s)
+{
+    PddBy::Buffer buffer;
+    for (std::size_t i = 0; i < s.size(); i++)
+    {
+        buffer.push_back(static_cast<PddBy::Buffer::value_type>(s[i]));
+    }
+
+    return buffer;
+}
+
+} // anonymous namespace
 
 namespace PddBy
 {
@@ -19,7 +34,7 @@ namespace Detail
 namespace Magic
 {
 
-PddBy::Buffer const FileHeader = { 'B', 'P', 'F', 'T', 'C', 'A', 'M' };
+PddBy::Buffer const FileHeader = BufferFromString("BPFTCAM");
 
 } // namespace Magic
 
@@ -37,7 +52,7 @@ void ParseImageId(std::string const& imageId, std::string& imageDirName, std::st
 
 } // namespace Detail
 
-Oak14ImageLimb::Oak14ImageLimb(Path const& rootPath, std::string const& magicString, std::uint32_t magicNumber) :
+Oak14ImageLimb::Oak14ImageLimb(Path const& rootPath, std::string const& magicString, uint32_t magicNumber) :
     m_rootPath(rootPath),
     m_magicString(magicString),
     m_magicNumber(magicNumber)
@@ -60,22 +75,22 @@ ImageLeaf Oak14ImageLimb::GetImage(std::string const& imageId) const
     if (imageDirName == "images")
     {
         filter.reset(new UglyPngImageFilter(imageName));
-        filter.reset(new TripleDesFilter(std::move(filter), Hash::RipeMd256FromString(imageName + m_magicString)));
-        filter.reset(new HeaderCheckingFilter(std::move(filter), Detail::Magic::FileHeader));
+        filter.reset(new TripleDesFilter(filter, Hash::RipeMd256FromString(imageName + m_magicString)));
+        filter.reset(new HeaderCheckingFilter(filter, Detail::Magic::FileHeader));
     }
     else if (imageDirName == "signs")
     {
-        filter.reset(new BpftImageFilter(imageName + ".bpf", static_cast<std::uint16_t>(m_magicNumber) ^ 0x1234, 0x14));
-        filter.reset(new HeaderCheckingFilter(std::move(filter), Detail::Magic::FileHeader));
+        filter.reset(new BpftImageFilter(imageName + ".bpf", static_cast<uint16_t>(m_magicNumber) ^ 0x1234, 0x14));
+        filter.reset(new HeaderCheckingFilter(filter, Detail::Magic::FileHeader));
     }
 
-    if (filter == nullptr)
+    if (filter.get() == 0)
     {
         throw Shit("Not implemented");
     }
 
     IReadStreamPtr fileStream(new FileReadStream(Path(m_rootPath / imageDirName / (imageName + ".bpf"))));
-    IReadStreamPtr imageStream = filter->Apply(std::move(fileStream));
+    IReadStreamPtr imageStream = filter->Apply(fileStream);
 
     ImageLeaf imageLeaf;
     imageLeaf.Id = imageId;

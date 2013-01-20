@@ -9,7 +9,6 @@ class MemoryReadStream : public IReadStream
 {
 public:
     MemoryReadStream(Buffer const& buffer);
-    MemoryReadStream(Buffer&& buffer);
     virtual ~MemoryReadStream();
 
     // IReadStream implementation

@@ -6,14 +6,14 @@
 namespace
 {
 
-std::uint32_t RotateLeft(std::uint32_t value, std::uint8_t shift)
+uint32_t RotateLeft(uint32_t value, uint8_t shift)
 {
-    return (value << shift) | (value >> (sizeof(std::uint32_t) * 8 - shift));
+    return (value << shift) | (value >> (sizeof(uint32_t) * 8 - shift));
 }
 
-std::uint32_t RotateRight(std::uint32_t value, std::uint8_t shift)
+uint32_t RotateRight(uint32_t value, uint8_t shift)
 {
-    return (value >> shift) | (value << (sizeof(std::uint32_t) * 8 - shift));
+    return (value >> shift) | (value << (sizeof(uint32_t) * 8 - shift));
 }
 
 } // anonymous namespace
@@ -34,8 +34,8 @@ std::size_t const SubKeySize = KeySize / 2; // == 4
 class TrashCartPrngRandom::Impl
 {
 public:
-    typedef std::uint32_t KeyType[Magic::KeySize];
-    typedef std::uint32_t SubKeyType[Magic::SubKeySize];
+    typedef uint32_t KeyType[Magic::KeySize];
+    typedef uint32_t SubKeyType[Magic::SubKeySize];
 
 public:
     Impl();
@@ -48,12 +48,12 @@ private:
     void MakeTransformBox();
 
 private:
-    std::uint32_t m_idx1Null;
-    std::uint32_t m_idx2Null;
-    std::uint32_t m_idx3Null;
-    std::uint32_t m_idxBox1[Magic::SubKeySize];
-    std::uint32_t m_idxBox2[Magic::SubKeySize];
-    std::uint32_t m_rotBox[Magic::KeySize];
+    uint32_t m_idx1Null;
+    uint32_t m_idx2Null;
+    uint32_t m_idx3Null;
+    uint32_t m_idxBox1[Magic::SubKeySize];
+    uint32_t m_idxBox2[Magic::SubKeySize];
+    uint32_t m_rotBox[Magic::KeySize];
     KeyType m_key;
     SubKeyType m_subKey1;
     SubKeyType m_subKey2;
@@ -81,18 +81,18 @@ void TrashCartPrngRandom::Impl::Crypt(KeyStreamType& v)
 
     for (std::size_t n = 0; n < Magic::SubKeySize; n++)
     {
-        std::uint32_t idx1 = m_idxBox1[n];
-        std::uint32_t idx2 = m_idxBox2[n];
+        uint32_t idx1 = m_idxBox1[n];
+        uint32_t idx2 = m_idxBox2[n];
 
         for (std::size_t i = 0; i < Magic::SubKeySize; i++)
         {
-            std::uint32_t const k1 = m_subKey1[idx1];
-            std::uint32_t const k2 = m_subKey1[idx1 + 1];
-            std::uint32_t const k3 = m_subKey2[idx2];
-            std::uint32_t const k4 = m_subKey2[idx2 + 1];
+            uint32_t const k1 = m_subKey1[idx1];
+            uint32_t const k2 = m_subKey1[idx1 + 1];
+            uint32_t const k3 = m_subKey2[idx2];
+            uint32_t const k4 = m_subKey2[idx2 + 1];
 
-            std::uint32_t const rot1 = m_rotBox[idx2 + idx1];
-            std::uint32_t const rot2 = m_rotBox[idx2 + idx1 + 1];
+            uint32_t const rot1 = m_rotBox[idx2 + idx1];
+            uint32_t const rot2 = m_rotBox[idx2 + idx1 + 1];
 
             if (idx1 == m_idx1Null)
             {
@@ -165,7 +165,7 @@ void TrashCartPrngRandom::Impl::MakeTransformBox()
     m_idx3Null = (m_idx3Null ^ (m_idx3Null >> 16)) % Magic::SubKeySize;
 }
 
-TrashCartPrngRandom::TrashCartPrngRandom(std::uint32_t seed) :
+TrashCartPrngRandom::TrashCartPrngRandom(uint32_t seed) :
     m_impl(new Impl())
 {
     union
@@ -176,7 +176,7 @@ TrashCartPrngRandom::TrashCartPrngRandom(std::uint32_t seed) :
             KeyStreamType KeyStream;
         } Typed;
 
-        std::uint32_t Raw[(sizeof(Impl::KeyType) + sizeof(KeyStreamType)) / sizeof(std::uint32_t)];
+        uint32_t Raw[(sizeof(Impl::KeyType) + sizeof(KeyStreamType)) / sizeof(uint32_t)];
     } key;
 
     key.Raw[0] = seed;
@@ -194,7 +194,7 @@ TrashCartPrngRandom::~TrashCartPrngRandom()
     //
 }
 
-std::uint8_t TrashCartPrngRandom::GetNext()
+uint8_t TrashCartPrngRandom::GetNext()
 {
     m_impl->Crypt(m_keyStream);
 

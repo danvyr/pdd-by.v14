@@ -10,6 +10,11 @@ NoopFilter::NoopFilter()
     //
 }
 
+NoopFilter::~NoopFilter()
+{
+    //
+}
+
 IReadStreamPtr NoopFilter::Apply(IReadStreamPtr stream)
 {
     return stream;

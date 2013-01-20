@@ -10,7 +10,7 @@ namespace PddBy
 
 struct TraffRegLeaf;
 typedef ICrawler<TraffRegLeaf> ITraffRegCrawler;
-typedef std::unique_ptr<ITraffRegCrawler> ITraffRegCrawlerPtr;
+typedef std::auto_ptr<ITraffRegCrawler> ITraffRegCrawlerPtr;
 
 class ITraffRegLimb
 {

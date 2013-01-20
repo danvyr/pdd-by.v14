@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include <stdint.h>
+
 namespace PddBy
 {
 
@@ -17,13 +19,14 @@ public:
     };
 
 public:
-    BpftcamImageFilter(std::string const& imageName, std::uint16_t magicNumber, CipherType cipherType);
+    BpftcamImageFilter(std::string const& imageName, uint16_t magicNumber, CipherType cipherType);
+    virtual ~BpftcamImageFilter();
 
     virtual IReadStreamPtr Apply(IReadStreamPtr stream);
 
 private:
     std::string const m_imageName;
-    std::uint16_t const m_magicNumber;
+    uint16_t const m_magicNumber;
     CipherType const m_cipherType;
 };
 

@@ -11,12 +11,6 @@ MemoryReadStream::MemoryReadStream(Buffer const& buffer) :
     //
 }
 
-MemoryReadStream::MemoryReadStream(Buffer&& buffer) :
-    m_buffer(std::move(buffer))
-{
-    //
-}
-
 MemoryReadStream::~MemoryReadStream()
 {
     //
@@ -35,7 +29,7 @@ void MemoryReadStream::Read(void* buffer, std::size_t size)
         throw EndOfStreamShit("Premature end of data");
     }
 
-    std::copy(&m_buffer[0], &m_buffer[size], static_cast<std::uint8_t*>(buffer));
+    std::copy(&m_buffer[0], &m_buffer[size], static_cast<uint8_t*>(buffer));
     m_buffer.erase(m_buffer.begin(), m_buffer.begin() + size);
 }
 

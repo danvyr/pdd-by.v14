@@ -18,6 +18,4 @@ private:
     Buffer& m_buffer;
 };
 
-typedef std::unique_ptr<IWriteStream> IWriteStreamPtr;
-
 } // namespace PddBy

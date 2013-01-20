@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pddby/Buffer.h"
+#include "Buffer.h"
 
 #include <memory>
 
@@ -17,7 +17,7 @@ public:
     virtual void ReadToEnd(Buffer& buffer) = 0;
 };
 
-typedef std::unique_ptr<IReadStream> IReadStreamPtr;
+typedef std::auto_ptr<IReadStream> IReadStreamPtr;
 
 class IRandomAccessReadStream : public IReadStream
 {
@@ -28,6 +28,6 @@ public:
     virtual void SetPosition(std::size_t offset) = 0;
 };
 
-typedef std::unique_ptr<IRandomAccessReadStream> IRandomAccessReadStreamPtr;
+typedef std::auto_ptr<IRandomAccessReadStream> IRandomAccessReadStreamPtr;
 
 } // namespace PddBy

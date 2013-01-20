@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cstdint>
 #include <string>
+
+#include <stdint.h>
 
 namespace PddBy
 {
@@ -9,7 +10,7 @@ namespace PddBy
 class BpftHelper
 {
 public:
-    static std::uint32_t ImageNameToRandSeed(std::string const& name, std::uint16_t magicNumber);
+    static uint32_t ImageNameToRandSeed(std::string const& name, uint16_t magicNumber);
 };
 
 } // namespace PddBy

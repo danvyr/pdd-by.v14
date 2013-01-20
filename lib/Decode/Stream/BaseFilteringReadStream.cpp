@@ -4,7 +4,7 @@ namespace PddBy
 {
 
 BaseFilteringReadStream::BaseFilteringReadStream(IReadStreamPtr stream) :
-    m_stream(std::move(stream))
+    m_stream(stream)
 {
     //
 }
@@ -23,7 +23,7 @@ void BaseFilteringReadStream::Read(Buffer& buffer, std::size_t size)
 void BaseFilteringReadStream::Read(void* buffer, std::size_t size)
 {
     m_stream->Read(buffer, size);
-    ApplyFilter(static_cast<std::uint8_t*>(buffer), size);
+    ApplyFilter(static_cast<uint8_t*>(buffer), size);
 }
 
 void BaseFilteringReadStream::ReadToEnd(Buffer& buffer)

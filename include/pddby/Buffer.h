@@ -1,11 +1,12 @@
 #pragma once
 
-#include <cstdint>
 #include <vector>
+
+#include <stdint.h>
 
 namespace PddBy
 {
 
-typedef std::vector<std::uint8_t> Buffer;
+typedef std::vector<uint8_t> Buffer;
 
 } // namespace PddBy

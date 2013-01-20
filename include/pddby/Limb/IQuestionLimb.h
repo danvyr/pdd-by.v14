@@ -10,7 +10,7 @@ namespace PddBy
 
 struct QuestionLeaf;
 typedef ICrawler<QuestionLeaf> IQuestionCrawler;
-typedef std::unique_ptr<IQuestionCrawler> IQuestionCrawlerPtr;
+typedef std::auto_ptr<IQuestionCrawler> IQuestionCrawlerPtr;
 
 class IQuestionLimb
 {

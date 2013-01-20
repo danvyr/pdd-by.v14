@@ -9,13 +9,13 @@
 #include "Decode/Util/CodepageConverter.h"
 #include "Decode/Util/Hash.h"
 #include "Decode/Util/Path.h"
-
-#include "pddby/Leaf/QuestionLeaf.h"
-#include "pddby/Leaf/SectionLeaf.h"
-#include "pddby/Limb/ISectionLimb.h"
-#include "pddby/Shit.h"
+#include "Leaf/QuestionLeaf.h"
+#include "Leaf/SectionLeaf.h"
+#include "Limb/ISectionLimb.h"
+#include "Shit.h"
 
 #include <boost/lexical_cast.hpp>
+#include <boost/static_assert.hpp>
 
 #include <cassert>
 #include <cstring>
@@ -30,59 +30,59 @@ namespace Detail
 
 struct __attribute__((packed)) ImageStringInfo
 {
-    std::uint8_t Length;
+    uint8_t Length;
     char Text[32];
 };
 
 struct __attribute__((packed)) QuestionStringInfo
 {
-    std::uint16_t Length;
+    uint16_t Length;
     char Text[300];
 };
 
 struct __attribute__((packed)) AnswerStringInfo
 {
-    std::uint16_t Length;
+    uint16_t Length;
     char Text[400];
 };
 
 struct __attribute__((packed)) AdviceStringInfo
 {
-    std::uint8_t Length;
+    uint8_t Length;
     char Text[64];
 };
 
 struct __attribute__((packed)) BlockDataInfo
 {
-    std::uint8_t Pad1[0x10];
-    std::uint8_t ZeroIfValidBlock;
-    std::uint8_t SectionBits[6];
-    std::uint8_t TopicNumber;
+    uint8_t Pad1[0x10];
+    uint8_t ZeroIfValidBlock;
+    uint8_t SectionBits[6];
+    uint8_t TopicNumber;
     ImageStringInfo Image;
-    std::uint8_t Pad2[1];
+    uint8_t Pad2[1];
     QuestionStringInfo Questions[2];
-    std::uint8_t Xxx;
-    std::uint8_t AnswerCount;
+    uint8_t Xxx;
+    uint8_t AnswerCount;
     AnswerStringInfo Answers[2][5];
-    std::uint8_t AnswerIndex;
+    uint8_t AnswerIndex;
     AdviceStringInfo Advices[2];
-    std::uint8_t Pad3[1];
-    std::uint16_t Xxx2[0x10];
-    std::uint16_t Xxx3;
-    std::uint8_t Pad4[0x20];
+    uint8_t Pad3[1];
+    uint16_t Xxx2[0x10];
+    uint16_t Xxx3;
+    uint8_t Pad4[0x20];
 };
 
 struct __attribute__((packed)) BlockInfo
 {
-    std::uint8_t Pad1[0x10];
-    std::uint16_t Magic1;
-    std::uint16_t Magic2;
-    std::uint8_t Pad2[0x10];
+    uint8_t Pad1[0x10];
+    uint16_t Magic1;
+    uint16_t Magic2;
+    uint8_t Pad2[0x10];
     BlockDataInfo Data;
-    std::uint8_t Pad3[0x10];
+    uint8_t Pad3[0x10];
 };
 
-static_assert(sizeof(BlockInfo) == 4934, "BlockInfo size is not valid");
+BOOST_STATIC_ASSERT(sizeof(BlockInfo) == 4934);
 
 template<typename StringInfoT>
 std::string StringInfoToString(StringInfoT const& stringInfo)
@@ -108,7 +108,7 @@ BlockDataInfo ReadBlockData(IRandomAccessReadStream& stream, std::size_t index, 
     std::memcpy(&blockData[0], &blockInfo.Data, sizeof(blockInfo.Data));
 
     IReadStreamPtr encodedBlockStream(new MemoryReadStream(blockData));
-    IReadStreamPtr decodedBlockStream = filter->Apply(std::move(encodedBlockStream));
+    IReadStreamPtr decodedBlockStream = filter->Apply(encodedBlockStream);
 
     decodedBlockStream->Read(&blockInfo.Data, sizeof(blockInfo.Data));
 
@@ -152,7 +152,7 @@ QuestionLeaf BlockDataInfoToQuestionLeaf(BlockDataInfo const& blockDataInfo, std
         }
 
         // Hand-made std::atoi() with first two digits swapped
-        std::uint32_t const randSeed =
+        uint32_t const randSeed =
             (blockDataInfo.Image.Text[2] - 0x30u) * 1000 +
             (blockDataInfo.Image.Text[0] - 0x30u) * 100 +
             (blockDataInfo.Image.Text[3] - 0x30u) * 10 +
@@ -369,11 +369,11 @@ void Oak14QuestionLimb::SetupBlockMaps(ISectionLimb& sectionLimb)
         {
             Detail::BlockDataInfo const blockDataInfo = Detail::ReadBlockData(*m_stream, i, m_magicString);
 
-            for (std::size_t i = 0; i < sizeof(blockDataInfo.SectionBits) * 8; i++)
+            for (std::size_t j = 0; j < sizeof(blockDataInfo.SectionBits) * 8; j++)
             {
-                if (blockDataInfo.SectionBits[i / 8] & (1 << (i % 8)))
+                if (blockDataInfo.SectionBits[j / 8] & (1 << (j % 8)))
                 {
-                    m_sectionBlocks[sectionIds.at(i)].push_back(i);
+                    m_sectionBlocks[sectionIds.at(j)].push_back(i);
                 }
             }
 

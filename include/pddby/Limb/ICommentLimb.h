@@ -2,15 +2,12 @@
 
 #include "../ICrawler.h"
 
-#include <memory>
 #include <string>
 
 namespace PddBy
 {
 
 struct CommentLeaf;
-typedef ICrawler<CommentLeaf> ICommentCrawler;
-typedef std::unique_ptr<ICommentCrawler> ICommentCrawlerPtr;
 
 class ICommentLimb
 {

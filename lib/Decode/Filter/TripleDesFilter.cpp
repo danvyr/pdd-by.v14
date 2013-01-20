@@ -1,10 +1,7 @@
 #include "TripleDesFilter.h"
 
 #include "Decode/Stream/MemoryReadStream.h"
-
-#include "pddby/Shit.h"
-
-#include <boost/format.hpp>
+#include "Shit.h"
 
 #include <cryptopp/des.h>
 #include <cryptopp/filters.h>
@@ -16,8 +13,13 @@ namespace PddBy
 {
 
 TripleDesFilter::TripleDesFilter(IFilterPtr filter, Buffer const& key) :
-    m_filter(std::move(filter)),
+    m_filter(filter),
     m_key(key)
+{
+    //
+}
+
+TripleDesFilter::~TripleDesFilter()
 {
     //
 }
@@ -29,7 +31,7 @@ IReadStreamPtr TripleDesFilter::Apply(IReadStreamPtr stream)
 
     try
     {
-        std::uint8_t iv[CryptoPP::DES_EDE3::BLOCKSIZE];
+        uint8_t iv[CryptoPP::DES_EDE3::BLOCKSIZE];
         std::memset(iv, 0xff, sizeof(iv));
 
         CryptoPP::CBC_CTS_Mode<CryptoPP::DES_EDE3>::Decryption decryptor;
@@ -39,10 +41,10 @@ IReadStreamPtr TripleDesFilter::Apply(IReadStreamPtr stream)
     }
     catch (CryptoPP::Exception const& e)
     {
-        throw Shit(boost::format("Unable to decrypt using Triple DES: %s") % e.what());
+        throw Shit(std::string("Unable to decrypt using Triple DES: ") + e.what());
     }
 
-    return m_filter->Apply(IReadStreamPtr(new MemoryReadStream(std::move(buffer))));
+    return m_filter->Apply(IReadStreamPtr(new MemoryReadStream(buffer)));
 }
 
 } // namespace PddBy

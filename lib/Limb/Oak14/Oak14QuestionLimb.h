@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pddby/Limb/IQuestionLimb.h"
+#include "Limb/IQuestionLimb.h"
 
 #include <map>
 #include <vector>
@@ -8,14 +8,10 @@
 namespace PddBy
 {
 
+class CodepageConverter;
+class IRandomAccessReadStream;
 class ISectionLimb;
 class Path;
-
-class IRandomAccessReadStream;
-typedef std::unique_ptr<IRandomAccessReadStream> IRandomAccessReadStreamPtr;
-
-class CodepageConverter;
-typedef std::unique_ptr<CodepageConverter> CodepageConverterPtr;
 
 class Oak14QuestionLimb : public IQuestionLimb
 {
@@ -42,8 +38,8 @@ private:
     std::string const m_magicString;
     std::vector<std::size_t> const m_ticketTopics;
     std::size_t m_langId;
-    IRandomAccessReadStreamPtr m_stream;
-    CodepageConverterPtr m_conv;
+    std::auto_ptr<IRandomAccessReadStream> const m_stream;
+    std::auto_ptr<CodepageConverter> const m_conv;
     IdToBlockMap m_sectionBlocks;
     IdToBlockMap m_topicBlocks;
 };

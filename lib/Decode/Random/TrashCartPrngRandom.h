@@ -1,7 +1,8 @@
 #pragma once
 
-#include <cstdint>
 #include <memory>
+
+#include <stdint.h>
 
 namespace PddBy
 {
@@ -23,18 +24,18 @@ namespace PddBy
 
 class TrashCartPrngRandom
 {
-    typedef std::uint32_t KeyStreamType[4];
+    typedef uint32_t KeyStreamType[4];
 
     class Impl;
 
 public:
-    TrashCartPrngRandom(std::uint32_t seed);
+    TrashCartPrngRandom(uint32_t seed);
     ~TrashCartPrngRandom();
 
-    std::uint8_t GetNext();
+    uint8_t GetNext();
 
 private:
-    std::unique_ptr<Impl> m_impl;
+    std::auto_ptr<Impl> const m_impl;
     KeyStreamType m_keyStream;
 };
 

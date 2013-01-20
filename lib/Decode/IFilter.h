@@ -1,12 +1,11 @@
 #pragma once
 
+#include "IReadStream.h"
+
 #include <memory>
 
 namespace PddBy
 {
-
-class IReadStream;
-typedef std::unique_ptr<IReadStream> IReadStreamPtr;
 
 class IFilter
 {
@@ -16,6 +15,6 @@ public:
     virtual IReadStreamPtr Apply(IReadStreamPtr stream) = 0;
 };
 
-typedef std::unique_ptr<IFilter> IFilterPtr;
+typedef std::auto_ptr<IFilter> IFilterPtr;
 
 } // namespace PddBy

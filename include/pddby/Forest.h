@@ -1,13 +1,14 @@
 #pragma once
 
+#include "IOak.h"
+
 #include <memory>
 #include <string>
 
 namespace PddBy
 {
 
-class IOak;
-typedef std::unique_ptr<IOak> IOakPtr;
+typedef std::auto_ptr<IOak> IOakPtr;
 
 class Forest
 {

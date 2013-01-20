@@ -1,13 +1,11 @@
 #include "Oak14.h"
 
-#include "Oak14/Oak14ImageLimb.h"
-#include "Oak14/Oak14QuestionLimb.h"
-
 #include "Decode/Util/Hash.h"
-#include "Limb/JsonSectionLimb.h"
-#include "Limb/JsonTopicLimb.h"
-
-#include "pddby/Shit.h"
+#include "Limb/Json/JsonSectionLimb.h"
+#include "Limb/Json/JsonTopicLimb.h"
+#include "Limb/Oak14/Oak14ImageLimb.h"
+#include "Limb/Oak14/Oak14QuestionLimb.h"
+#include "Shit.h"
 
 #include <boost/algorithm/string/predicate.hpp>
 
@@ -21,7 +19,7 @@ namespace PddBy
 namespace Detail
 {
 
-void GetMagicFromJson(Json::Value const& jsonMagic, Path const& pdd32ExePath, std::uint32_t& magicNumber,
+void GetMagicFromJson(Json::Value const& jsonMagic, Path const& pdd32ExePath, uint32_t& magicNumber,
     std::string& magicString)
 {
     std::string const checksum = Hash::ToHexString(Hash::Md5FromFile(pdd32ExePath));
@@ -55,7 +53,7 @@ Oak14::Oak14(Path const& rootPath) :
     }
 
     std::string magicString;
-    std::uint32_t magicNumber;
+    uint32_t magicNumber;
     Detail::GetMagicFromJson(m_jsonRoot["magic"], m_rootPath / "pdd32.exe", magicNumber, magicString);
 
     m_sectionLimb.reset(new JsonSectionLimb(m_jsonRoot["sections"], 0));

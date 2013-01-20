@@ -23,16 +23,18 @@ namespace Detail
 template<typename RandomT>
 class RandomXoringReadStream : public BaseFilteringReadStream
 {
+    typedef std::auto_ptr<RandomT> RandomPtr;
+
 public:
-    RandomXoringReadStream(IReadStreamPtr stream, std::unique_ptr<RandomT> random) :
-        BaseFilteringReadStream(std::move(stream)),
-        m_random(std::move(random))
+    RandomXoringReadStream(IReadStreamPtr stream, RandomPtr random) :
+        BaseFilteringReadStream(stream),
+        m_random(random)
     {
         //
     }
 
 protected:
-    virtual void ApplyFilter(std::uint8_t* buffer, std::size_t size)
+    virtual void ApplyFilter(uint8_t* buffer, std::size_t size)
     {
         for (std::size_t i = 0; i < size; i++)
         {
@@ -41,15 +43,20 @@ protected:
     }
 
 private:
-    std::unique_ptr<RandomT> m_random;
+    RandomPtr m_random;
 };
 
 } // namespace Detail
 
-BpftImageFilter::BpftImageFilter(std::string const& imageName, std::uint16_t magicNumber, std::uint16_t magicSeed) :
+BpftImageFilter::BpftImageFilter(std::string const& imageName, uint16_t magicNumber, uint16_t magicSeed) :
     m_imageName(imageName),
     m_magicNumber(magicNumber),
     m_magicSeed(magicSeed)
+{
+    //
+}
+
+BpftImageFilter::~BpftImageFilter()
 {
     //
 }
@@ -64,9 +71,9 @@ IReadStreamPtr BpftImageFilter::Apply(IReadStreamPtr stream)
 //        throw Shit("Image is not a valid BPFT image");
 //    }
 
-    std::unique_ptr<DelphiRandom> random(new DelphiRandom(BpftHelper::ImageNameToRandSeed(m_imageName, m_magicNumber) ^
+    std::auto_ptr<DelphiRandom> random(new DelphiRandom(BpftHelper::ImageNameToRandSeed(m_imageName, m_magicNumber) ^
         m_magicSeed));
-    return IReadStreamPtr(new Detail::RandomXoringReadStream<DelphiRandom>(std::move(stream), std::move(random)));
+    return IReadStreamPtr(new Detail::RandomXoringReadStream<DelphiRandom>(stream, random));
 }
 
 } // namespace PddBy

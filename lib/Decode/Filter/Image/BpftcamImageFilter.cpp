@@ -5,8 +5,7 @@
 #include "Decode/Random/AmPrngRandom.h"
 #include "Decode/Random/TrashCartPrngRandom.h"
 #include "Decode/Stream/BaseFilteringReadStream.h"
-
-#include "pddby/Shit.h"
+#include "Shit.h"
 
 namespace PddBy
 {
@@ -24,16 +23,18 @@ namespace Detail
 template<typename RandomT>
 class RandomXoringReadStream : public BaseFilteringReadStream
 {
+    typedef std::auto_ptr<RandomT> RandomPtr;
+
 public:
-    RandomXoringReadStream(IReadStreamPtr stream, std::unique_ptr<RandomT> random) :
-        BaseFilteringReadStream(std::move(stream)),
-        m_random(std::move(random))
+    RandomXoringReadStream(IReadStreamPtr stream, RandomPtr random) :
+        BaseFilteringReadStream(stream),
+        m_random(random)
     {
         //
     }
 
 protected:
-    virtual void ApplyFilter(std::uint8_t* buffer, std::size_t size)
+    virtual void ApplyFilter(uint8_t* buffer, std::size_t size)
     {
         for (std::size_t i = 0; i < size; i++)
         {
@@ -42,15 +43,20 @@ protected:
     }
 
 private:
-    std::unique_ptr<RandomT> m_random;
+    RandomPtr m_random;
 };
 
 } // namespace Detail
 
-BpftcamImageFilter::BpftcamImageFilter(std::string const& imageName, std::uint16_t magicNumber, CipherType cipherType) :
+BpftcamImageFilter::BpftcamImageFilter(std::string const& imageName, uint16_t magicNumber, CipherType cipherType) :
     m_imageName(imageName),
     m_magicNumber(magicNumber),
     m_cipherType(cipherType)
+{
+    //
+}
+
+BpftcamImageFilter::~BpftcamImageFilter()
 {
     //
 }
@@ -69,10 +75,9 @@ IReadStreamPtr BpftcamImageFilter::Apply(IReadStreamPtr stream)
     {
     case TrashCartPrng:
         {
-            std::unique_ptr<TrashCartPrngRandom> random(new TrashCartPrngRandom(BpftHelper::ImageNameToRandSeed(m_imageName,
+            std::auto_ptr<TrashCartPrngRandom> random(new TrashCartPrngRandom(BpftHelper::ImageNameToRandSeed(m_imageName,
                 m_magicNumber)));
-            return IReadStreamPtr(new Detail::RandomXoringReadStream<TrashCartPrngRandom>(std::move(stream),
-                std::move(random)));
+            return IReadStreamPtr(new Detail::RandomXoringReadStream<TrashCartPrngRandom>(stream, random));
         }
 
     case AmPrng:
@@ -85,9 +90,9 @@ IReadStreamPtr BpftcamImageFilter::Apply(IReadStreamPtr stream)
                 magicIv[i] = i & 2;
             }
 
-            std::unique_ptr<AmPrngRandom> random(new AmPrngRandom(magicKey, magicIv,
+            std::auto_ptr<AmPrngRandom> random(new AmPrngRandom(magicKey, magicIv,
                 BpftHelper::ImageNameToRandSeed(m_imageName, m_magicNumber) % 0x300));
-            return IReadStreamPtr(new Detail::RandomXoringReadStream<AmPrngRandom>(std::move(stream), std::move(random)));
+            return IReadStreamPtr(new Detail::RandomXoringReadStream<AmPrngRandom>(stream, random));
         }
     }
 

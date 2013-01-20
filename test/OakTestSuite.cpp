@@ -1,14 +1,14 @@
-#include "pddby/Forest.h"
-#include "pddby/Leaf/ImageLeaf.h"
-#include "pddby/Leaf/QuestionLeaf.h"
-#include "pddby/Leaf/SectionLeaf.h"
-#include "pddby/Leaf/TopicLeaf.h"
-#include "pddby/Limb/IImageLimb.h"
-#include "pddby/Limb/IQuestionLimb.h"
-#include "pddby/Limb/ISectionLimb.h"
-#include "pddby/Limb/ITopicLimb.h"
-#include "pddby/IOak.h"
-#include "pddby/Shit.h"
+#include "Forest.h"
+#include "Leaf/ImageLeaf.h"
+#include "Leaf/QuestionLeaf.h"
+#include "Leaf/SectionLeaf.h"
+#include "Leaf/TopicLeaf.h"
+#include "Limb/IImageLimb.h"
+#include "Limb/IQuestionLimb.h"
+#include "Limb/ISectionLimb.h"
+#include "Limb/ITopicLimb.h"
+#include "IOak.h"
+#include "Shit.h"
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/test/unit_test.hpp>
@@ -98,7 +98,7 @@ BOOST_AUTO_TEST_CASE(OakTest)
 
         ImageLeaf const imageLeaf = oak->GetImageLimb().GetImage(imageName);
 
-        std::ofstream s("../.test/images/" + imageName + ".png", std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+        std::ofstream s(("../.test/images/" + imageName + ".png").c_str(), std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
         s.write(reinterpret_cast<char const*>(&imageLeaf.Data[0]), imageLeaf.Data.size());
     }
 

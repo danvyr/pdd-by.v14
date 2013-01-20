@@ -1,8 +1,10 @@
 #pragma once
 
-#include "pddby/Buffer.h"
+#include "Buffer.h"
 
 #include <memory>
+
+#include <stdint.h>
 
 namespace PddBy
 {
@@ -15,10 +17,10 @@ public:
     AmPrngRandom(Buffer const& key, Buffer const& iv, std::size_t dropLength);
     ~AmPrngRandom();
 
-    std::uint8_t GetNext();
+    uint8_t GetNext();
 
 private:
-    std::unique_ptr<Impl> m_impl;
+    std::auto_ptr<Impl> const m_impl;
 };
 
 } // namespace PddBy

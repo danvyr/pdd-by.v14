@@ -3,8 +3,6 @@
 #include "Decode/Stream/StreamShit.h"
 #include "Decode/Util/Path.h"
 
-#include <boost/format.hpp>
-
 namespace PddBy
 {
 
@@ -33,7 +31,7 @@ void FileReadStream::Open(Path const& path)
     }
     catch (std::ios_base::failure const&)
     {
-        throw StreamShit(boost::format("Unable to open file for reading: %s") % path.ToString());
+        throw StreamShit("Unable to open file for reading: " + path.ToString());
     }
 }
 
@@ -63,7 +61,7 @@ void FileReadStream::SetPosition(std::size_t offset)
     }
     catch (std::ios_base::failure const& e)
     {
-        throw StreamShit(boost::format("Error setting stream position: %s") % e.what());
+        throw StreamShit(std::string("Error setting stream position: ") + e.what());
     }
 }
 
@@ -88,7 +86,7 @@ void FileReadStream::Read(void* buffer, std::size_t size)
     }
     catch (std::ios_base::failure const& e)
     {
-        throw StreamShit(boost::format("Error while reading from stream: %s") % e.what());
+        throw StreamShit(std::string("Error while reading from stream: ") + e.what());
     }
 
     if (static_cast<std::size_t>(m_stream.gcount()) != size)
@@ -113,7 +111,7 @@ void FileReadStream::ReadToEnd(Buffer& buffer)
         }
         catch (std::ios_base::failure const& e)
         {
-            throw StreamShit(boost::format("Error while reading from stream: %s") % e.what());
+            throw StreamShit(std::string("Error while reading from stream: ") + e.what());
         }
 
         tempBuffer.resize(m_stream.gcount());

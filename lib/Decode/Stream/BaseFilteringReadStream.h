@@ -16,7 +16,7 @@ public:
     virtual void ReadToEnd(Buffer& buffer);
 
 protected:
-    virtual void ApplyFilter(std::uint8_t* buffer, std::size_t size) = 0;
+    virtual void ApplyFilter(uint8_t* buffer, std::size_t size) = 0;
 
 private:
     IReadStreamPtr m_stream;

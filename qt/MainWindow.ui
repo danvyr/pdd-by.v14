@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>405</width>
+    <height>244</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Учебная программа ПДД</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetFixedSize</enum>
+    </property>
+    <item row="0" column="0">
+     <widget class="QToolButton" name="sectionTrainingButton">
+      <property name="toolTip">
+       <string>Тренировка</string>
+      </property>
+      <property name="icon">
+       <iconset resource="PddByGui.qrc">
+        <normaloff>:/Resources/emotion_face_panda.png</normaloff>:/Resources/emotion_face_panda.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <layout class="QVBoxLayout" name="sectionLabelLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="verticalSpacer">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>1</width>
+          <height>1</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="sectionTitleLabel">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Главы ПДД</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sectionDescriptionLabel">
+        <property name="text">
+         <string>Выберите определённую главу правил</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>1</width>
+          <height>1</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0">
+     <widget class="QToolButton" name="topicTrainingButton">
+      <property name="toolTip">
+       <string>Тренировка</string>
+      </property>
+      <property name="icon">
+       <iconset resource="PddByGui.qrc">
+        <normaloff>:/Resources/emotion_face_panda.png</normaloff>:/Resources/emotion_face_panda.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <layout class="QVBoxLayout" name="topicLabelLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="verticalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>1</width>
+          <height>1</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="topicTitleLabel">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Тематические билеты</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="topicDescriptionLabel">
+        <property name="text">
+         <string>Выберите один из тематических разделов</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>1</width>
+          <height>1</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="0">
+     <widget class="QToolButton" name="ticketTrainingButton">
+      <property name="toolTip">
+       <string>Тренировка</string>
+      </property>
+      <property name="icon">
+       <iconset resource="PddByGui.qrc">
+        <normaloff>:/Resources/emotion_face_panda.png</normaloff>:/Resources/emotion_face_panda.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <layout class="QVBoxLayout" name="ticketLabelLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="verticalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>1</width>
+          <height>1</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="ticketTitleLabel">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Билет №</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="ticketDescriptionLabel">
+        <property name="text">
+         <string>Введите номер известного вам билета</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>1</width>
+          <height>1</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="0">
+     <widget class="QToolButton" name="randomTicketTrainingButton">
+      <property name="toolTip">
+       <string>Тренировка</string>
+      </property>
+      <property name="icon">
+       <iconset resource="PddByGui.qrc">
+        <normaloff>:/Resources/emotion_face_panda.png</normaloff>:/Resources/emotion_face_panda.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <layout class="QVBoxLayout" name="randomTicketLabelLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <spacer name="verticalSpacer_7">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>1</width>
+          <height>1</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLabel" name="randomTicketTitleLabel">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Случайный билет</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="randomTicketDescriptionLabel">
+        <property name="text">
+         <string>Дайте программе выбрать для вас билет</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer_8">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>1</width>
+          <height>1</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item row="3" column="1">
+     <widget class="QToolButton" name="randomTicketExamButton">
+      <property name="toolTip">
+       <string>Контроль</string>
+      </property>
+      <property name="icon">
+       <iconset resource="PddByGui.qrc">
+        <normaloff>:/Resources/emotion_darth_wader.png</normaloff>:/Resources/emotion_darth_wader.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QToolButton" name="ticketExamButton">
+      <property name="toolTip">
+       <string>Контроль</string>
+      </property>
+      <property name="icon">
+       <iconset resource="PddByGui.qrc">
+        <normaloff>:/Resources/emotion_darth_wader.png</normaloff>:/Resources/emotion_darth_wader.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QToolButton" name="topicExamButton">
+      <property name="toolTip">
+       <string>Контроль</string>
+      </property>
+      <property name="icon">
+       <iconset resource="PddByGui.qrc">
+        <normaloff>:/Resources/emotion_darth_wader.png</normaloff>:/Resources/emotion_darth_wader.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
+      </property>
+      <property name="toolButtonStyle">
+       <enum>Qt::ToolButtonIconOnly</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>405</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="rulesMenu">
+    <property name="title">
+     <string>Rules</string>
+    </property>
+    <widget class="QMenu" name="trainingMenu">
+     <property name="title">
+      <string>Training</string>
+     </property>
+     <addaction name="sectionTrainingAction"/>
+     <addaction name="topicTrainingAction"/>
+     <addaction name="ticketTrainingAction"/>
+     <addaction name="randomTicketTrainingAction"/>
+    </widget>
+    <widget class="QMenu" name="examMenu">
+     <property name="title">
+      <string>Exam</string>
+     </property>
+     <addaction name="topicExamAction"/>
+     <addaction name="ticketExamAction"/>
+     <addaction name="randomTicketExamAction"/>
+    </widget>
+    <addaction name="trainingMenu"/>
+    <addaction name="examMenu"/>
+    <addaction name="separator"/>
+    <addaction name="quitAction"/>
+   </widget>
+   <widget class="QMenu" name="helpMenu">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="aboutAction"/>
+    <addaction name="aboutQtAction"/>
+   </widget>
+   <addaction name="rulesMenu"/>
+   <addaction name="helpMenu"/>
+  </widget>
+  <action name="aboutAction">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="aboutQtAction">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="topicTrainingAction">
+   <property name="text">
+    <string>Topic</string>
+   </property>
+  </action>
+  <action name="ticketTrainingAction">
+   <property name="text">
+    <string>Ticket</string>
+   </property>
+  </action>
+  <action name="randomTicketTrainingAction">
+   <property name="text">
+    <string>Random Ticket</string>
+   </property>
+  </action>
+  <action name="actionSection">
+   <property name="text">
+    <string>Section</string>
+   </property>
+  </action>
+  <action name="sectionTrainingAction">
+   <property name="text">
+    <string>Section</string>
+   </property>
+  </action>
+  <action name="topicExamAction">
+   <property name="text">
+    <string>Topic</string>
+   </property>
+  </action>
+  <action name="ticketExamAction">
+   <property name="text">
+    <string>Ticket</string>
+   </property>
+  </action>
+  <action name="randomTicketExamAction">
+   <property name="text">
+    <string>Random Ticket</string>
+   </property>
+  </action>
+  <action name="quitAction">
+   <property name="text">
+    <string>Quit</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="PddByGui.qrc"/>
+ </resources>
+ <connections/>
+</ui>

@@ -12,23 +12,39 @@
 
 #include <algorithm>
 
+namespace
+{
+
+PddBy::Buffer BufferFromString(std::string const& s)
+{
+    PddBy::Buffer buffer;
+    for (std::size_t i = 0; i < s.size(); i++)
+    {
+        buffer.push_back(static_cast<PddBy::Buffer::value_type>(s[i]));
+    }
+
+    return buffer;
+}
+
+} // anonymous namespace
+
 namespace PddBy
 {
 
 namespace Magic
 {
 
-Buffer const PngFileHeader = { 0x89, 'P', 'N', 'G', 0x0d, 0x0a, 0x1a, 0x0a };
+Buffer const PngFileHeader = BufferFromString("\x89PNG\r\n\x1a\n");
 
-std::uint16_t const InitialImageNameSeed = 0x1a80;
+uint16_t const InitialImageNameSeed = 0x1a80;
 
 namespace PngChunk
 {
 
 #define PNG_CHUNK_TYPE(x) #x[0] | (#x[1] << 8) | (#x[2] << 16) | (#x[3] << 24)
 
-std::uint32_t const IHDR = PNG_CHUNK_TYPE(IHDR);
-std::uint32_t const IDAT = PNG_CHUNK_TYPE(IDAT);
+uint32_t const IHDR = PNG_CHUNK_TYPE(IHDR);
+uint32_t const IDAT = PNG_CHUNK_TYPE(IDAT);
 
 #undef PNG_CHUNK_TYPE
 
@@ -56,10 +72,10 @@ IReadStreamPtr UglyPngImageFilter::Apply(IReadStreamPtr stream)
 
     outputStream.Write(Magic::PngFileHeader);
 
-    std::uint16_t magic1[2];
+    uint16_t magic1[2];
     stream->Read(&magic1, sizeof(magic1));
 
-    std::uint16_t const magic2 = BpftHelper::ImageNameToRandSeed(m_imageName, 0 ^ Magic::InitialImageNameSeed);
+    uint16_t const magic2 = BpftHelper::ImageNameToRandSeed(m_imageName, 0 ^ Magic::InitialImageNameSeed);
     if ((magic1[0] ^ magic1[1]) != magic2)
     {
         throw Shit(boost::format("Image magic doesn't match: 0x%04x != 0x%04x") % magic1 % magic2);
@@ -67,7 +83,7 @@ IReadStreamPtr UglyPngImageFilter::Apply(IReadStreamPtr stream)
 
     for (;;)
     {
-        std::uint32_t chunkSize = 0;
+        uint32_t chunkSize = 0;
 
         try
         {
@@ -78,11 +94,11 @@ IReadStreamPtr UglyPngImageFilter::Apply(IReadStreamPtr stream)
             break;
         }
 
-        stream->Read(reinterpret_cast<std::uint8_t*>(&chunkSize) + 1, sizeof(chunkSize) - 1);
+        stream->Read(reinterpret_cast<uint8_t*>(&chunkSize) + 1, sizeof(chunkSize) - 1);
 
         chunkSize ^= 0xff;
 
-        std::uint32_t chunkType = 0;
+        uint32_t chunkType = 0;
         stream->Read(&chunkType, sizeof(chunkType));
         if (chunkType == 'p')
         {
@@ -122,13 +138,13 @@ IReadStreamPtr UglyPngImageFilter::Apply(IReadStreamPtr stream)
         }
 
         CryptoPP::CRC32 crcHasher;
-        crcHasher.Update(reinterpret_cast<std::uint8_t const*>(&chunkType), sizeof(chunkType));
+        crcHasher.Update(reinterpret_cast<uint8_t const*>(&chunkType), sizeof(chunkType));
         crcHasher.Update(&chunkData[0], chunkData.size());
 
-        std::uint8_t chunkCrc[CryptoPP::CRC32::DIGESTSIZE];
+        uint8_t chunkCrc[CryptoPP::CRC32::DIGESTSIZE];
         crcHasher.Final(chunkCrc);
 
-        std::reverse(reinterpret_cast<std::uint8_t*>(&chunkSize), reinterpret_cast<std::uint8_t*>(&chunkSize) +
+        std::reverse(reinterpret_cast<uint8_t*>(&chunkSize), reinterpret_cast<uint8_t*>(&chunkSize) +
             sizeof(chunkSize));
         std::reverse(chunkCrc, chunkCrc + sizeof(chunkCrc));
 
@@ -138,7 +154,7 @@ IReadStreamPtr UglyPngImageFilter::Apply(IReadStreamPtr stream)
         outputStream.Write(&chunkCrc, sizeof(chunkCrc));
     }
 
-    return IReadStreamPtr(new MemoryReadStream(std::move(outputBuffer)));
+    return IReadStreamPtr(new MemoryReadStream(outputBuffer));
 }
 
 } // namespace PddBy

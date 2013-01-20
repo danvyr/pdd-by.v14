@@ -2,15 +2,19 @@
 
 #include "Decode/IReadStream.h"
 #include "Decode/Util/Hash.h"
-
-#include "pddby/Shit.h"
+#include "Shit.h"
 
 namespace PddBy
 {
 
 HeaderCheckingFilter::HeaderCheckingFilter(IFilterPtr filter, Buffer const& header) :
-    m_filter(std::move(filter)),
+    m_filter(filter),
     m_header(header)
+{
+    //
+}
+
+HeaderCheckingFilter::~HeaderCheckingFilter()
 {
     //
 }
@@ -24,7 +28,7 @@ IReadStreamPtr HeaderCheckingFilter::Apply(IReadStreamPtr stream)
         throw Shit("Stream header doesn't match: " + Hash::ToHexString(tempBuffer) + " vs. " + Hash::ToHexString(m_header));
     }
 
-    return m_filter->Apply(std::move(stream));
+    return m_filter->Apply(stream);
 }
 
 } // namespace PddBy
