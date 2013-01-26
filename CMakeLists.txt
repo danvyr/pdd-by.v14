@@ -6,6 +6,8 @@ add_definitions(-std=c++98
     -Wno-deprecated-declarations
     -Wno-long-long)
 
+set(CMAKE_OSX_ARCHITECTURES x86_64)
+
 find_package(Boost 1.49 REQUIRED filesystem system unit_test_framework)
 include_directories(${Boost_INCLUDE_DIRS})
 

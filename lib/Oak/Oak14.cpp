@@ -45,7 +45,7 @@ void GetMagicFromJson(Json::Value const& jsonMagic, Path const& pdd32ExePath, ui
 Oak14::Oak14(Path const& rootPath) :
     m_rootPath(rootPath)
 {
-    std::ifstream jsonStream("data/oak14.json");
+    std::ifstream jsonStream("/Users/mikedld/Repo/pdd-by.v14.obj/data/oak14.json");
     Json::Reader jsonReader;
     if (!jsonReader.parse(jsonStream, m_jsonRoot))
     {

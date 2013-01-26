@@ -13,8 +13,4 @@ include_directories(.. ../lib)
 add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_SOURCES})
 target_link_libraries(${PROJECT_NAME}
     pddby
-    ${Boost_LIBRARIES}
-    crypto
-    cryptopp
-    icuuc
 )

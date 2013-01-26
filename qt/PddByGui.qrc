@@ -1,6 +1,0 @@
-<RCC>
-  <qresource prefix="/">
-    <file>Resources/emotion_darth_wader.png</file>
-    <file>Resources/emotion_face_panda.png</file>
-  </qresource>
-</RCC>

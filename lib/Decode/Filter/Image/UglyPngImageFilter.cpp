@@ -45,12 +45,38 @@ namespace PngChunk
 
 uint32_t const IHDR = PNG_CHUNK_TYPE(IHDR);
 uint32_t const IDAT = PNG_CHUNK_TYPE(IDAT);
+uint32_t const IEND = PNG_CHUNK_TYPE(IEND);
 
 #undef PNG_CHUNK_TYPE
 
 } // namespace PngChunk
 
 } // namespace Magic
+
+namespace Detail
+{
+
+void WritePngChunk(IWriteStream& stream, uint32_t chunkType, Buffer const& chunkData)
+{
+    CryptoPP::CRC32 crcHasher;
+    crcHasher.Update(reinterpret_cast<uint8_t const*>(&chunkType), sizeof(chunkType));
+    crcHasher.Update(&chunkData[0], chunkData.size());
+
+    uint8_t chunkCrc[CryptoPP::CRC32::DIGESTSIZE];
+    crcHasher.Final(chunkCrc);
+
+    uint32_t chunkSize = chunkData.size();
+
+    std::reverse(reinterpret_cast<uint8_t*>(&chunkSize), reinterpret_cast<uint8_t*>(&chunkSize) + sizeof(chunkSize));
+    std::reverse(chunkCrc, chunkCrc + sizeof(chunkCrc));
+
+    stream.Write(&chunkSize, sizeof(chunkSize));
+    stream.Write(&chunkType, sizeof(chunkType));
+    stream.Write(chunkData);
+    stream.Write(&chunkCrc, sizeof(chunkCrc));
+}
+
+} // namespace Detail
 
 UglyPngImageFilter::UglyPngImageFilter(std::string const& imageName) :
     m_imageName(imageName)
@@ -78,7 +104,7 @@ IReadStreamPtr UglyPngImageFilter::Apply(IReadStreamPtr stream)
     uint16_t const magic2 = BpftHelper::ImageNameToRandSeed(m_imageName, 0 ^ Magic::InitialImageNameSeed);
     if ((magic1[0] ^ magic1[1]) != magic2)
     {
-        throw Shit(boost::format("Image magic doesn't match: 0x%04x != 0x%04x") % magic1 % magic2);
+        throw Shit(boost::format("Image magic doesn't match: 0x%04x ^ 0x%04x != 0x%04x") % magic1[0] % magic1[1] % magic2);
     }
 
     for (;;)
@@ -137,22 +163,10 @@ IReadStreamPtr UglyPngImageFilter::Apply(IReadStreamPtr stream)
             }
         }
 
-        CryptoPP::CRC32 crcHasher;
-        crcHasher.Update(reinterpret_cast<uint8_t const*>(&chunkType), sizeof(chunkType));
-        crcHasher.Update(&chunkData[0], chunkData.size());
-
-        uint8_t chunkCrc[CryptoPP::CRC32::DIGESTSIZE];
-        crcHasher.Final(chunkCrc);
-
-        std::reverse(reinterpret_cast<uint8_t*>(&chunkSize), reinterpret_cast<uint8_t*>(&chunkSize) +
-            sizeof(chunkSize));
-        std::reverse(chunkCrc, chunkCrc + sizeof(chunkCrc));
-
-        outputStream.Write(&chunkSize, sizeof(chunkSize));
-        outputStream.Write(&chunkType, sizeof(chunkType));
-        outputStream.Write(chunkData);
-        outputStream.Write(&chunkCrc, sizeof(chunkCrc));
+        Detail::WritePngChunk(outputStream, chunkType, chunkData);
     }
+
+    Detail::WritePngChunk(outputStream, Magic::PngChunk::IEND, Buffer());
 
     return IReadStreamPtr(new MemoryReadStream(outputBuffer));
 }
