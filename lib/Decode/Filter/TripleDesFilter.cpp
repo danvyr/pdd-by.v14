@@ -3,9 +3,11 @@
 #include "Decode/Stream/MemoryReadStream.h"
 #include "Shit.h"
 
-#include <cstring>
+#include <cryptopp/des.h>
+#include <cryptopp/filters.h>
+#include <cryptopp/modes.h>
 
-#include <openssl/des.h>
+#include <cstring>
 
 namespace PddBy
 {
@@ -27,27 +29,22 @@ IReadStreamPtr TripleDesFilter::Apply(IReadStreamPtr stream)
     Buffer buffer;
     stream->ReadToEnd(buffer);
 
-    DES_key_schedule sched[3];
-    DES_set_key(const_cast<DES_cblock*>(reinterpret_cast<DES_cblock const*>(&m_key[0])), &sched[0]);
-    DES_set_key(const_cast<DES_cblock*>(reinterpret_cast<DES_cblock const*>(&m_key[8])), &sched[1]);
-    DES_set_key(const_cast<DES_cblock*>(reinterpret_cast<DES_cblock const*>(&m_key[16])), &sched[2]);
+    buffer.reserve((buffer.size() + 7) & ~7);
 
-    DES_cblock iv;
-    std::memset(&iv, 0xff, sizeof(iv));
+    uint8_t iv[CryptoPP::DES_EDE3::BLOCKSIZE];
+    std::memset(iv, 0xff, sizeof(iv));
 
-    DES_ede3_cbc_encrypt(&buffer[0], &buffer[0], buffer.size() & ~7, &sched[0], &sched[1], &sched[2], &iv, DES_DECRYPT);
+    uint8_t tail[CryptoPP::DES_EDE3::BLOCKSIZE];
+    std::memcpy(tail, &buffer[(buffer.size() - 8) & ~7], sizeof(tail));
+
+    CryptoPP::CBC_Mode<CryptoPP::DES_EDE3>::Decryption des1(&m_key[0], 24, iv);
+    CryptoPP::ArraySource(&buffer[0], buffer.size() & ~7, true, new CryptoPP::StreamTransformationFilter(des1,
+        new CryptoPP::ArraySink(&buffer[0], buffer.size() & ~7), CryptoPP::StreamTransformationFilter::NO_PADDING));
 
     if ((buffer.size() & 7) != 0)
     {
-        buffer.reserve((buffer.size() + 7) & ~7);
-
-        DES_set_key(const_cast<DES_cblock*>(reinterpret_cast<DES_cblock const*>(&m_key[0])), &sched[0]);
-        DES_set_key(const_cast<DES_cblock*>(reinterpret_cast<DES_cblock const*>(&m_key[8])), &sched[1]);
-        DES_set_key(const_cast<DES_cblock*>(reinterpret_cast<DES_cblock const*>(&m_key[16])), &sched[2]);
-
-        DES_ecb3_encrypt(&iv, &iv, &sched[0], &sched[1], &sched[2], DES_ENCRYPT);
-
-        *reinterpret_cast<uint64_t*>(&buffer[buffer.size() & ~7]) ^= *reinterpret_cast<uint64_t*>(&iv);
+        CryptoPP::DES_EDE3::Encryption des2(&m_key[0], 24);
+        des2.ProcessAndXorBlock(tail, &buffer[buffer.size() & ~7], &buffer[buffer.size() & ~7]);
     }
 
     return m_filter->Apply(IReadStreamPtr(new MemoryReadStream(buffer)));

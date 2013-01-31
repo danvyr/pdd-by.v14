@@ -1,14 +1,68 @@
 #include "TripleDes24Filter.h"
 
 #include "Decode/Stream/MemoryReadStream.h"
-#include "Shit.h"
+
+#include <cryptopp/des.h>
 
 #include <cstring>
 
-#include <openssl/des.h>
-
 namespace PddBy
 {
+
+namespace Detail
+{
+
+class Triplet
+{
+public:
+    static std::size_t const DataSize = 3 * CryptoPP::DES::BLOCKSIZE;
+
+public:
+    Triplet(void* data) :
+        m_data(static_cast<uint8_t*>(data))
+    {
+        //
+    }
+
+    uint8_t* GetBlock(std::size_t const i) const
+    {
+        return m_data + i * CryptoPP::DES::BLOCKSIZE;
+    }
+
+    void Fill(uint8_t ch)
+    {
+        std::memset(m_data, ch, Detail::Triplet::DataSize);
+    }
+
+    void CopyFrom(Triplet& other)
+    {
+        std::memcpy(m_data, other.m_data, Detail::Triplet::DataSize);
+    }
+
+    void Shuffle()
+    {
+        std::swap(GetWord32(1), GetWord32(2));
+        // Seems like a defect: this transformation is present in original code, but is improperly coded, so it effectively
+        // results in block[3] = block[3]
+        // std::swap(GetWord32(3), GetWord32(4));
+    }
+
+    void Swap(Triplet& other)
+    {
+        std::swap(m_data, other.m_data);
+    }
+
+private:
+    uint32_t& GetWord32(std::size_t const i) const
+    {
+        return reinterpret_cast<uint32_t*>(m_data)[i];
+    }
+
+private:
+    uint8_t* m_data;
+};
+
+} // namespace Detail
 
 TripleDes24Filter::TripleDes24Filter(IFilterPtr filter, Buffer const& key) :
     m_filter(filter),
@@ -27,51 +81,40 @@ IReadStreamPtr TripleDes24Filter::Apply(IReadStreamPtr stream)
     Buffer buffer;
     stream->ReadToEnd(buffer);
 
-    DES_key_schedule sched[3];
-    DES_set_key(const_cast<DES_cblock*>(reinterpret_cast<DES_cblock const*>(&m_key[16])), &sched[0]);
-    DES_set_key(const_cast<DES_cblock*>(reinterpret_cast<DES_cblock const*>(&m_key[8])), &sched[1]);
-    DES_set_key(const_cast<DES_cblock*>(reinterpret_cast<DES_cblock const*>(&m_key[0])), &sched[2]);
+    CryptoPP::DES::Decryption des1(&m_key[16], 8);
+    CryptoPP::DES::Encryption des2(&m_key[8], 8);
+    CryptoPP::DES::Decryption des3(&m_key[0], 8);
 
-    uint32_t temp[2][6];
+    uint8_t temp[2][Detail::Triplet::DataSize];
 
-    uint32_t* iv = reinterpret_cast<uint32_t*>(&temp[0]);
-    uint32_t* original = reinterpret_cast<uint32_t*>(&temp[1]);
+    Detail::Triplet iv(&temp[0]);
+    Detail::Triplet original(&temp[1]);
 
-    std::memset(iv, 0xff, sizeof(uint32_t) * 6);
+    iv.Fill(0xff);
 
-    for (std::size_t i = 0; i < buffer.size() / 24; i++)
+    for (std::size_t i = 0; i < buffer.size() / Detail::Triplet::DataSize; i++)
     {
-        uint32_t* block = reinterpret_cast<uint32_t*>(&buffer[i * 24]);
+        Detail::Triplet triplet(&buffer[i * Detail::Triplet::DataSize]);
 
-        std::memcpy(original, block, 24);
+        original.CopyFrom(triplet);
 
-        DES_encrypt1(&block[0], &sched[0], DES_DECRYPT);
-        DES_encrypt1(&block[2], &sched[0], DES_DECRYPT);
-        DES_encrypt1(&block[4], &sched[0], DES_DECRYPT);
+        des1.ProcessAndXorBlock(triplet.GetBlock(0), 0, triplet.GetBlock(0));
+        des1.ProcessAndXorBlock(triplet.GetBlock(1), 0, triplet.GetBlock(1));
+        des1.ProcessAndXorBlock(triplet.GetBlock(2), 0, triplet.GetBlock(2));
 
-        std::swap(block[1], block[2]);
-        // Seems like a defect: this transformation is present in original code, but is improperly coded, so it effectively
-        // results in block[3] = block[3]
-        // std::swap(block[3], block[4]);
+        triplet.Shuffle();
 
-        DES_encrypt1(&block[0], &sched[1], DES_ENCRYPT);
-        DES_encrypt1(&block[2], &sched[1], DES_ENCRYPT);
-        DES_encrypt1(&block[4], &sched[1], DES_ENCRYPT);
+        des2.ProcessAndXorBlock(triplet.GetBlock(0), 0, triplet.GetBlock(0));
+        des2.ProcessAndXorBlock(triplet.GetBlock(1), 0, triplet.GetBlock(1));
+        des2.ProcessAndXorBlock(triplet.GetBlock(2), 0, triplet.GetBlock(2));
 
-        std::swap(block[1], block[2]);
-        // Seems like a defect: this transformation is present in original code, but is improperly coded, so it effectively
-        // results in block[3] = block[3]
-        // std::swap(block[3], block[4]);
+        triplet.Shuffle();
 
-        DES_encrypt1(&block[0], &sched[2], DES_DECRYPT);
-        DES_encrypt1(&block[2], &sched[2], DES_DECRYPT);
-        DES_encrypt1(&block[4], &sched[2], DES_DECRYPT);
+        des3.ProcessAndXorBlock(triplet.GetBlock(0), iv.GetBlock(0), triplet.GetBlock(0));
+        des3.ProcessAndXorBlock(triplet.GetBlock(1), iv.GetBlock(1), triplet.GetBlock(1));
+        des3.ProcessAndXorBlock(triplet.GetBlock(2), iv.GetBlock(2), triplet.GetBlock(2));
 
-        *reinterpret_cast<uint64_t*>(&block[0]) ^= *reinterpret_cast<uint64_t*>(&iv[0]);
-        *reinterpret_cast<uint64_t*>(&block[2]) ^= *reinterpret_cast<uint64_t*>(&iv[2]);
-        *reinterpret_cast<uint64_t*>(&block[4]) ^= *reinterpret_cast<uint64_t*>(&iv[4]);
-
-        std::swap(iv, original);
+        original.Swap(iv);
     }
 
     return m_filter->Apply(IReadStreamPtr(new MemoryReadStream(buffer)));
