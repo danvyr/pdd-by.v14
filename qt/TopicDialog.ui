@@ -1,31 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SectionDialog</class>
- <widget class="QDialog" name="SectionDialog">
+ <class>TopicDialog</class>
+ <widget class="QDialog" name="TopicDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>473</width>
-    <height>496</height>
+    <width>405</width>
+    <height>229</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Выберите главу</string>
+   <string>Выберите тематический раздел</string>
   </property>
   <layout class="QVBoxLayout" name="dialogLayout">
    <item>
-    <widget class="QListView" name="sectionsView">
-     <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
-     </property>
-     <property name="verticalScrollMode">
-      <enum>QAbstractItemView::ScrollPerPixel</enum>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
+    <widget class="QListView" name="topicsView"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="dialogButtons">
@@ -39,12 +29,16 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>topicsView</tabstop>
+  <tabstop>dialogButtons</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
    <sender>dialogButtons</sender>
    <signal>rejected()</signal>
-   <receiver>SectionDialog</receiver>
+   <receiver>TopicDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">

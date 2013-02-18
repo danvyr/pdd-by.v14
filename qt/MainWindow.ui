@@ -238,6 +238,9 @@
    </property>
   </action>
   <action name="saveAction">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save</string>
    </property>
@@ -246,12 +249,14 @@
    </property>
   </action>
   <action name="saveAsAction">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save As...</string>
    </property>
   </action>
  </widget>
- <resources>
- </resources>
+ <resources/>
  <connections/>
 </ui>

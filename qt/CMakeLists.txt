@@ -10,24 +10,35 @@ set(${PROJECT_NAME}_SOURCES
     MainWindow.cpp
     SectionDialog.cpp
     TicketDialog.cpp
+    TicketNumberDialog.cpp
+    TopicDialog.cpp
 )
 
 set(${PROJECT_NAME}_HEADERS
     MainWindow.h
     SectionDialog.h
     TicketDialog.h
+    TicketNumberDialog.h
+    TopicDialog.h
 )
 
 qt4_wrap_ui(${PROJECT_NAME}_UI_SOURCES
     MainWindow.ui
     SectionDialog.ui
     TicketDialog.ui
+    TicketNumberDialog.ui
+    TopicDialog.ui
+)
+
+qt4_add_resources(${PROJECT_NAME}_QRC_SOURCES
+    PddBy.qrc
 )
 
 add_executable(${PROJECT_NAME} MACOSX_BUNDLE
     ${${PROJECT_NAME}_SOURCES}
     ${${PROJECT_NAME}_HEADERS}
     ${${PROJECT_NAME}_UI_SOURCES}
+    ${${PROJECT_NAME}_QRC_SOURCES}
     PddBy.icns
     PddBy.ico)
 

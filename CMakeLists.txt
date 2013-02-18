@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 2.8)
 
 add_definitions(-std=c++98
     -Wall -Wextra -Werror -pedantic
-    -Wno-deprecated-declarations
     -Wno-long-long)
 
 set(CMAKE_OSX_ARCHITECTURES x86_64)

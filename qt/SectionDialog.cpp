@@ -148,8 +148,10 @@ SectionDialogImpl::SectionDialogImpl(SectionDialog& dialog, PddBy::ISectionLimb 
         m_model.appendRow(item);
     }
 
+    m_ui.sectionsView->setAttribute(Qt::WA_MacShowFocusRect, false);
     m_ui.sectionsView->setItemDelegate(&m_itemDelegate);
     m_ui.sectionsView->setModel(&m_model);
+    m_ui.sectionsView->setCurrentIndex(m_model.index(0, 0));
 
     connect(m_ui.sectionsView, SIGNAL(doubleClicked(QModelIndex)), SLOT(PrepareTicket()));
     connect(m_ui.dialogButtons, SIGNAL(accepted()), SLOT(PrepareTicket()));
